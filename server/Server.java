@@ -11,7 +11,7 @@ public class Server {
 
             LocateRegistry.createRegistry(port);
 
-            Naming.rebind("rmi://localhost:"+port+"/Process", proc);
+            Naming.rebind("rmi://localhost:"+port+"/dbProcess", proc);
 
             System.out.println("Server is running and waiting for client requests");
         } catch (Exception e) {

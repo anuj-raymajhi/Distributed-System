@@ -1,4 +1,5 @@
 package server;
+
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.Connection;
@@ -16,13 +17,13 @@ public class ProcessImpl extends UnicastRemoteObject implements dbProcess {
         establishConnection();
     }
     private static final long serialVersionUID = 1L;
-    private Connection connection;
+    private Connection connection = null;
 
     private void establishConnection() {
         try {
             Class.forName("org.sqlite.JDBC");
             
-            String dbFile = "server\\student.db";
+            String dbFile = ".\\student.db";
 
             connection = DriverManager.getConnection("jdbc:sqlite:"+dbFile);
 
@@ -61,22 +62,27 @@ public class ProcessImpl extends UnicastRemoteObject implements dbProcess {
 
     // @Override
     public String getRecord(String roll) throws RemoteException {
-        String results = "";
+        String result = "";
         
         try {
             
             PreparedStatement prepStatement = null;
             // Statement statement = connection.createStatement();
-            String query = "SELECT * FROM student WHERE RollNo = \"?\"";
+            String query = "SELECT * FROM student WHERE RollNo = ?";
             prepStatement = connection.prepareStatement(query);
             prepStatement.setString(1, roll);
             ResultSet resultSet = prepStatement.executeQuery();
+
             while(resultSet.next()){
-                results += resultSet.getString("column_name") + "\n";
+                String name = resultSet.getString("Name");
+                String address = resultSet.getString("Address");
+                int grade = resultSet.getInt("Grade");
+
+                result += "Name: " + name + ", Roll No: " + roll + ", Address: " + address + ", Grade: " + grade + "\n";
             }
         } catch (SQLException e) {
             System.out.println("Failed to read data from the database: "+e.getMessage());
         }
-        return results;
+        return result;
     }
 }

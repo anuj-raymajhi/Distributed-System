@@ -1,13 +1,13 @@
 import java.rmi.Naming;
 import java.util.Scanner;
+import server.dbProcess;
 
 public class Client {
     public static void main(String[] args) {
         try {
-
             int port = 1099;
             
-            Process proc = (Process) Naming.lookup("rmi://localhost:"+port+"/Process");
+            dbProcess proc = (dbProcess) Naming.lookup("rmi://localhost:"+port+"/dbProcess");
 
             Scanner sc = new Scanner(System.in);
 
@@ -26,6 +26,7 @@ public class Client {
             while(!breakConnection) {
                 System.out.print("Enter Choice(1/2/3): ");
                 choice = sc.nextInt();
+                sc.nextLine();
                 switch(choice){
                     case 1:
                     try {
@@ -38,7 +39,7 @@ public class Client {
                         address = sc.nextLine();
                         System.out.print("Enter Grade: ");
                         grade = sc.nextInt();
-
+                        sc.nextLine();
                         proc.addRecord(name, address, roll, grade);
                         System.out.println("Successfully added to the database.");
 
@@ -49,7 +50,7 @@ public class Client {
 
                     case 2:
                     System.out.print("Enter Roll no. : ");
-                    roll = sc.next();
+                    roll = sc.nextLine();
                     result = proc.getRecord(roll);
                     System.out.println(result);
                     break;
